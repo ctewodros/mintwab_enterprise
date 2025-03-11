@@ -31,3 +31,30 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        try:
+            self.user = User.objects.get(email__iexact=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('No account with this email address')
+        return value
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+    token = serializers.CharField(write_only=True)
+
+    def validate_token(self, value):
+        try:
+            RefreshToken(value).access_token
+        except Exception as e:
+            raise serializers.ValidationError('Invalid or expired token')
+        return value
+
+    def save(self, **kwargs):
+        user = self.context['user']
+        user.set_password(self.validated_data['password'])
+        user.save()
+        return user

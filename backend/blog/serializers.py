@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Category, Tag, Post, Comment
+from .models import Page
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +25,11 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'post', 'author', 'content', 'created_at', 'updated_at', 'is_approved']
         read_only_fields = ['author', 'is_approved']
+
+class PageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ['title', 'slug', 'content', 'meta_title', 'meta_description', 'created_at', 'updated_at']
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)

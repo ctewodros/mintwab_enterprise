@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from django.utils import timezone
 from .models import Category, Tag, Post, Comment
 from .serializers import CategorySerializer, TagSerializer, PostSerializer, CommentSerializer
+from .models import Page
+from rest_framework import viewsets
+from .serializers import PageSerializer
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -65,3 +68,9 @@ class CommentViewSet(viewsets.ModelViewSet):
             comment.save()
             return Response({'status': 'comment approved'})
         return Response({'status': 'unauthorized'}, status=403)
+
+
+class PageViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
+    lookup_field = 'slug'

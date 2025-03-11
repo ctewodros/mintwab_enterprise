@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
-import axios from 'axios';
+import axios from '../apiClient';
 
 interface LoginData {
   username: string;
@@ -26,18 +26,13 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/token/', formData);
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+      const { data } = await axios.post('/api/auth/token/', formData);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+      // Session will be maintained via httpOnly cookies
       navigate('/');
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Authentication failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }

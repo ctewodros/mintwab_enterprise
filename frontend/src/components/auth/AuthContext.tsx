@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/auth/user/');
+      const response = await axios.get('/api/auth/user/');
       setUser(response.data);
     } catch (error) {
       logout();
@@ -75,3 +75,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   );
 };
+const response = await axios.get('/api/organizations/');

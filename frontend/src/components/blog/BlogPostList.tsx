@@ -45,7 +45,7 @@ const BlogPostList = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/blog/posts/');
+      const response = await axios.get('/api/blog/posts/');
       setPosts(response.data);
     } catch (err) {
       setError('Failed to fetch blog posts');

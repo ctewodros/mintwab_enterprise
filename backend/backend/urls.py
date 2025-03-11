@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+
+path('api/faq/', include('faq.urls')),
 from rest_framework import routers
 from organization.views import OrganizationViewSet
 from blog.views import CategoryViewSet, TagViewSet, PostViewSet, CommentViewSet
+from blog.views import PageViewSet
 
 # Create a router and register our viewsets with it
 router = routers.DefaultRouter()
@@ -29,11 +32,13 @@ router.register(r'blog/categories', CategoryViewSet)
 router.register(r'blog/tags', TagViewSet)
 router.register(r'blog/posts', PostViewSet)
 router.register(r'blog/comments', CommentViewSet)
+router.register(r'pages', PageViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/auth/', include('accounts.urls')),
+    path('api/faq/', include('faq.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
