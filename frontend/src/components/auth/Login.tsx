@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
-import axios from '../apiClient';
+import axios from '../../apiClient';
 
 interface LoginData {
   username: string;
@@ -28,10 +28,13 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       const { data } = await axios.post('/api/auth/token/', formData);
+      console.log('Authentication successful:', data);
+      localStorage.setItem('access_token', data.access);
       axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
       // Session will be maintained via httpOnly cookies
       navigate('/');
     } catch (err) {
+      console.error('Authentication error:', err);
       setError('Authentication failed. Please check your credentials.');
     } finally {
       setLoading(false);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
-import axios from '../apiClient';
+import axios from '../../apiClient';
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
