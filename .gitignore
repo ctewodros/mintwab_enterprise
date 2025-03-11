@@ -1,0 +1,57 @@
+# Frontend dependencies
+node_modules/
+
+# Build artifacts
+/dist
+/dist-ssr
+/build
+
+# Backend Python artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.python-version
+venv/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Database files
+*.sqlite3
+*.db
+
+# Backend static files
+/backend/staticfiles/
+/backend/media/
+
+# Vite cache
+.cache/
+
+# TypeScript build
+*.tsbuildinfo
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
