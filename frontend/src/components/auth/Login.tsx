@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Container, Alert } from '@mui/material';
-import axios from '../../apiClient';
+import React, { useState } from 'react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Box, Button, TextField, Typography, Container, Alert, Avatar, Link } from '@mui/material';
+import apiClient from '../../apiClient';
+import { useOrganization } from '../organization/OrganizationContext';
 
 interface LoginData {
   username: string;
@@ -10,6 +11,7 @@ interface LoginData {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { organization } = useOrganization();
   const [formData, setFormData] = useState<LoginData>({
     username: '',
     password: ''
@@ -26,16 +28,23 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      const { data } = await axios.post('/api/auth/token/', formData);
-      console.log('Authentication successful:', data);
+      const { data } = await apiClient.post('/api/auth/token/', formData);
       localStorage.setItem('access_token', data.access);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-      // Session will be maintained via httpOnly cookies
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+      await organization?.fetchOrganization();
       navigate('/');
-    } catch (err) {
-      console.error('Authentication error:', err);
-      setError('Authentication failed. Please check your credentials.');
+    } catch (err: any) {
+      if (err.response?.data?.non_field_errors) {
+        setError(err.response.data.non_field_errors.join(' '));
+      } else if (err.response?.data?.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError('Authentication failed. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -51,10 +60,22 @@ const Login: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Typography component="h1" variant="h5">
-          Sign in
+        {organization?.logo && (
+          <Avatar
+            src={organization.logo}
+            alt={organization.title}
+            sx={{ width: 96, height: 96, mb: 2 }}
+          />
+        )}
+        <Typography component="h1" variant="h5" gutterBottom>
+          {organization?.title || 'Welcome'}
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        {organization?.motto && (
+          <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+            {organization.motto}
+          </Typography>
+        )}
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <TextField
             margin="normal"
@@ -89,6 +110,24 @@ const Login: React.FC = () => {
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+            <Link
+              component={RouterLink}
+              to="/forgot-password"
+              variant="body2"
+              sx={{ textDecoration: 'none' }}
+            >
+              Forgot password?
+            </Link>
+            <Link
+              component={RouterLink}
+              to="/register"
+              variant="body2"
+              sx={{ textDecoration: 'none' }}
+            >
+              Don't have an account? Sign Up
+            </Link>
+          </Box>
         </Box>
       </Box>
     </Container>

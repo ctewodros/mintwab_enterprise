@@ -10,7 +10,7 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import axios from 'axios';
+import axios from '../../apiClient';
 
 interface Organization {
   id?: number;
@@ -39,7 +39,7 @@ const OrganizationInterface = () => {
 
   const fetchOrganization = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/organizations/');
+      const response = await axios.get('/api/organizations/');
       if (response.data.length > 0) {
         setOrganization(response.data[0]);
       } else {
@@ -81,8 +81,8 @@ const OrganizationInterface = () => {
 
       const method = organization?.id ? 'put' : 'post';
       const url = organization?.id 
-        ? `http://localhost:8000/api/organizations/${organization.id}/`
-        : 'http://localhost:8000/api/organizations/';
+        ? `/api/organizations/${organization.id}/`
+        : '/api/organizations/';
 
       const response = await axios[method](url, formData, {
         headers: {
