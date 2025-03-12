@@ -10,6 +10,7 @@ import ResetPassword from './components/auth/ResetPassword'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import FAQList from './components/faq/FAQList'
 import AdminLayout from './components/layout/AdminLayout'
+import Dashboard from './components/dashboard/Dashboard'
 import { theme } from './theme'
 import { AuthProvider } from './components/auth/AuthContext'
 import { OrganizationProvider } from './components/organization/OrganizationContext'
@@ -30,7 +31,8 @@ function App() {
                   <ProtectedRoute>
                     <AdminLayout>
                       <Routes>
-                        <Route path="/" element={<OrganizationInterface />} />
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/organization" element={<OrganizationInterface />} />
                         <Route path="/blog" element={<BlogPostList />} />
                         <Route path="/pages/:slug" element={<PageDetail />} />
                         <Route path="/faq" element={<FAQList />} />

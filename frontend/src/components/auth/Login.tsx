@@ -35,9 +35,14 @@ const Login: React.FC = () => {
       const { data } = await apiClient.post('/api/auth/token/', formData);
       localStorage.setItem('access_token', data.access);
       apiClient.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-      await organization?.fetchOrganization();
-      navigate('/');
+      
+      // Refresh auth state before navigation
+      window.dispatchEvent(new Event('storage'));
+      navigate('/', { replace: true });
+      
     } catch (err: any) {
+      console.error('Login Error:', err.response?.data || err.message);
+      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
       if (err.response?.data?.non_field_errors) {
         setError(err.response.data.non_field_errors.join(' '));
       } else if (err.response?.data?.detail) {
